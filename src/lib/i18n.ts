@@ -1,0 +1,276 @@
+import type { DataStatus, Lang, Stop } from "./types";
+
+type Dict = Record<string, string>;
+
+const en = {
+  appName: "Calicut Bus Guide",
+  tagline: "Private bus routes, timings & fares in Kozhikode",
+  from: "From",
+  to: "To",
+  fromPlaceholder: "Where are you starting?",
+  toPlaceholder: "Where are you going?",
+  noMatch: "No stop matches “{q}”",
+  swap: "Swap From and To",
+  clear: "Clear",
+  find: "Find My Bus",
+  searching: "Searching…",
+  searchingBuses: "Looking for buses…",
+  leaveAfter: "Leave after",
+  anyTime: "Any time",
+  now: "Now",
+  direct: "Direct buses",
+  transfer: "With one bus change",
+  directOne: "{n} direct bus",
+  directMany: "{n} direct buses",
+  transferOne: "{n} option with a change",
+  transferMany: "{n} options with a change",
+  board: "Board at",
+  alight: "Get off at",
+  departs: "Departs",
+  arrives: "Arrives",
+  fare: "Fare",
+  fareUnavailable: "Fare not available",
+  fareUnavailableHint: "No fare is on record for this bus. We never estimate fares.",
+  totalFare: "Total fare",
+  totalFareUnavailable: "Total fare not available",
+  changeAt: "Change bus at",
+  wait: "wait",
+  min: "min",
+  hr: "h",
+  stopsCount: "stops",
+  stopOne: "stop",
+  leg: "Bus",
+  statusDemo: "Demo data",
+  statusUnverified: "Unverified",
+  statusVerified: "Verified",
+  statusDemoLong: "Demo data. Invented sample, not a real timetable.",
+  statusUnverifiedLong: "Unverified timetable from an imported dataset. Confirm with the bus operator before you travel.",
+  statusVerifiedLong: "Checked by a person against a named source.",
+  timetableOnly: "Scheduled timetable only. No live tracking or real-time arrival information.",
+  demoWarning:
+    "The timings and fares shown here are DEMO samples invented for this prototype. They are not real. Do not use them for travel.",
+  unverifiedWarning:
+    "These results come from an imported dataset that has not been verified. Times may be wrong or out of date. Confirm with the operator.",
+  emptyTitle: "No buses found",
+  emptyBody: "We have no direct bus or one-change journey between these stops in our data.",
+  emptyBodyAfter: "No buses leave after {time}. Try an earlier time or any time.",
+  emptyTipSwap: "Try swapping the direction.",
+  emptyTipNearby: "Try a nearby stop with a similar name.",
+  similarStops: "Similar stop names",
+  useAsFrom: "Use as From",
+  useAsTo: "Use as To",
+  clearTime: "Search any time",
+  pickBoth: "Please choose both stops.",
+  sameStop: "From and To must be different.",
+  errorTitle: "Something went wrong",
+  errorBody: "We couldn't search right now. Please try again.",
+  errorOffline: "You seem to be offline. Check your connection and try again.",
+  errorStops: "Those stops could not be found. Reload the page and choose again.",
+  retry: "Try again",
+  language: "Language",
+  noStops: "No stops are available yet. Run the database setup (see README).",
+  dataTitle: "About this data",
+  dataDemo: "Demo sample: {n} buses with invented timings and fares.",
+  dataImported: "Imported: {n} buses from the Kerala Private Bus Timing dataset (unverified).",
+  dataImportedAt: "Imported on {date}.",
+  dataUpstream:
+    "That dataset was converted from an RTI (Right to Information) PDF and was last updated {date} (when we checked). It may contain errors and be out of date.",
+  dataVerified: "Verified: {n} buses.",
+  dataFares: "Fares appear only where one is recorded. None are estimated.",
+  dataNoLicence: "The source states no licence.",
+  dataSource: "Source",
+  skipToResults: "Skip to results",
+  verifiedOn: "Verified on {date} against: {source}",
+  fareVerifiedOn: "Fare verified on {date} against: {source}",
+  errorRateLimited: "You have sent several requests. Please wait a few minutes and try again.",
+  errorPageTitle: "This page could not be shown",
+  errorPageBody: "Something went wrong on our side. Your searches are not affected. Please try again.",
+  notFoundTitle: "Page not found",
+  notFoundBody: "We could not find that page.",
+  backToSearch: "Back to search",
+  reportProblem: "Report a problem",
+  reportTitle: "Report a problem",
+  reportIntro: "Tell us what is wrong. A person reads every report. Timetables change only after they have been checked.",
+  reportAbout: "About",
+  reportKind: "What is the problem?",
+  reportKindTiming: "A time is wrong",
+  reportKindRoute: "A route is wrong or missing",
+  reportKindStop: "A stop name is wrong",
+  reportKindOther: "Something else",
+  reportMessage: "Describe the problem",
+  reportMessageHint: "At least {n} characters. Please do not include personal details here.",
+  reportSuggestion: "What should it be? (optional)",
+  reportContact: "Your phone or email (optional)",
+  reportContactHint: "Only if you want us to contact you. It is seen only by the people who review reports.",
+  reportSend: "Send report",
+  reportSending: "Sending…",
+  reportCancel: "Cancel",
+  reportClose: "Close",
+  reportThanks: "Thank you. A person will review your report. The timetable changes only after it has been checked.",
+  reportFailed: "Your report could not be sent. Please try again.",
+  reportBusy: "We cannot take reports right now. Please try again later.",
+  reportTimingShort: "Report a wrong time",
+  reportRouteShort: "Report a wrong or missing route",
+  reportStopShort: "Report a wrong stop name",
+  reportRoutePrompt: "Missing a bus or route?",
+  fieldRequired: "This field is required.",
+  fieldTooShort: "Please write at least {n} characters.",
+  fieldTooLong: "Please use at most {n} characters.",
+  fieldInvalid: "This value is not valid.",
+} satisfies Dict;
+
+export type TKey = keyof typeof en;
+
+const ml: Record<TKey, string> = {
+  appName: "കാലിക്കറ്റ് ബസ് ഗൈഡ്",
+  tagline: "കോഴിക്കോട്ടെ സ്വകാര്യ ബസ് റൂട്ടുകൾ, സമയം, നിരക്ക്",
+  from: "എവിടെ നിന്ന്",
+  to: "എങ്ങോട്ട്",
+  fromPlaceholder: "എവിടെ നിന്നാണ് തുടങ്ങുന്നത്?",
+  toPlaceholder: "എങ്ങോട്ടാണ് പോകേണ്ടത്?",
+  noMatch: "“{q}” എന്ന സ്റ്റോപ്പ് കണ്ടെത്തിയില്ല",
+  swap: "സ്റ്റോപ്പുകൾ പരസ്പരം മാറ്റുക",
+  clear: "മായ്ക്കുക",
+  find: "എന്റെ ബസ് കണ്ടെത്തുക",
+  searching: "തിരയുന്നു…",
+  searchingBuses: "ബസുകൾ തിരയുന്നു…",
+  leaveAfter: "ഇതിനു ശേഷം പുറപ്പെടുന്നത്",
+  anyTime: "ഏത് സമയവും",
+  now: "ഇപ്പോൾ",
+  direct: "നേരിട്ടുള്ള ബസുകൾ",
+  transfer: "ഒരു ബസ് മാറ്റത്തോടെ",
+  directOne: "നേരിട്ടുള്ള {n} ബസ്",
+  directMany: "നേരിട്ടുള്ള {n} ബസുകൾ",
+  transferOne: "ഒരു ബസ് മാറ്റമുള്ള {n} വഴി",
+  transferMany: "ഒരു ബസ് മാറ്റമുള്ള {n} വഴികൾ",
+  board: "കയറേണ്ട സ്റ്റോപ്പ്",
+  alight: "ഇറങ്ങേണ്ട സ്റ്റോപ്പ്",
+  departs: "പുറപ്പെടൽ",
+  arrives: "എത്തിച്ചേരൽ",
+  fare: "നിരക്ക്",
+  fareUnavailable: "നിരക്ക് ലഭ്യമല്ല",
+  fareUnavailableHint: "ഈ ബസിന്റെ നിരക്ക് രേഖപ്പെടുത്തിയിട്ടില്ല. നിരക്ക് ഞങ്ങൾ ഒരിക്കലും ഊഹിക്കില്ല.",
+  totalFare: "ആകെ നിരക്ക്",
+  totalFareUnavailable: "ആകെ നിരക്ക് ലഭ്യമല്ല",
+  changeAt: "ബസ് മാറേണ്ട സ്റ്റോപ്പ്",
+  wait: "കാത്തിരിപ്പ്",
+  min: "മിനിറ്റ്",
+  hr: "മണി.",
+  stopsCount: "സ്റ്റോപ്പുകൾ",
+  stopOne: "സ്റ്റോപ്പ്",
+  leg: "ബസ്",
+  statusDemo: "ഡെമോ വിവരം",
+  statusUnverified: "സ്ഥിരീകരിച്ചിട്ടില്ല",
+  statusVerified: "സ്ഥിരീകരിച്ചത്",
+  statusDemoLong: "ഡെമോ വിവരം. ഉണ്ടാക്കിയ മാതൃകയാണ്, യഥാർത്ഥ സമയക്രമമല്ല.",
+  statusUnverifiedLong:
+    "ഇറക്കുമതി ചെയ്ത വിവരങ്ങളിൽ നിന്നുള്ള, സ്ഥിരീകരിക്കാത്ത സമയക്രമം. യാത്രയ്ക്ക് മുമ്പ് ബസ് ഉടമയോട് ഉറപ്പാക്കുക.",
+  statusVerifiedLong: "ഒരാൾ പേരുള്ള ഒരു സ്രോതസ്സുമായി ഒത്തുനോക്കിയതാണ്.",
+  timetableOnly: "നിശ്ചയിച്ച സമയക്രമം മാത്രം. തത്സമയ ട്രാക്കിംഗോ ബസ് എത്തുന്ന തത്സമയ വിവരമോ ഇല്ല.",
+  demoWarning:
+    "ഇവിടെ കാണിക്കുന്ന സമയവും നിരക്കും ഈ മാതൃകയ്ക്കായി ഉണ്ടാക്കിയ ഡെമോ വിവരങ്ങളാണ്. ഇവ യഥാർത്ഥമല്ല. യാത്രയ്ക്ക് ഇവ ആശ്രയിക്കരുത്.",
+  unverifiedWarning:
+    "ഈ ഫലങ്ങൾ സ്ഥിരീകരിക്കാത്ത, ഇറക്കുമതി ചെയ്ത വിവരങ്ങളിൽ നിന്നാണ്. സമയം തെറ്റോ പഴയതോ ആകാം. ബസ് ഉടമയോട് ഉറപ്പാക്കുക.",
+  emptyTitle: "ബസുകളൊന്നും കണ്ടെത്തിയില്ല",
+  emptyBody: "ഈ സ്റ്റോപ്പുകൾക്കിടയിൽ നേരിട്ടോ ഒരു ബസ് മാറിയോ ഉള്ള യാത്ര ഞങ്ങളുടെ വിവരങ്ങളിൽ ഇല്ല.",
+  emptyBodyAfter: "{time}-ന് ശേഷം ബസുകളില്ല. നേരത്തെയുള്ള സമയം നോക്കുക, അല്ലെങ്കിൽ ഏത് സമയവും തിരഞ്ഞെടുക്കുക.",
+  emptyTipSwap: "ദിശ മാറ്റി നോക്കുക.",
+  emptyTipNearby: "സമാനമായ പേരുള്ള അടുത്ത സ്റ്റോപ്പ് നോക്കുക.",
+  similarStops: "സമാന പേരുള്ള സ്റ്റോപ്പുകൾ",
+  useAsFrom: "പുറപ്പെടുന്ന സ്റ്റോപ്പാക്കുക",
+  useAsTo: "എത്തേണ്ട സ്റ്റോപ്പാക്കുക",
+  clearTime: "ഏത് സമയത്തും തിരയുക",
+  pickBoth: "രണ്ട് സ്റ്റോപ്പുകളും തിരഞ്ഞെടുക്കുക.",
+  sameStop: "പുറപ്പെടുന്നതും എത്തേണ്ടതുമായ സ്റ്റോപ്പ് വ്യത്യസ്തമായിരിക്കണം.",
+  errorTitle: "എന്തോ പിശക് സംഭവിച്ചു",
+  errorBody: "ഇപ്പോൾ തിരയാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.",
+  errorOffline: "നിങ്ങൾ ഓഫ്‌ലൈനാണെന്ന് തോന്നുന്നു. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.",
+  errorStops: "ആ സ്റ്റോപ്പുകൾ കണ്ടെത്താനായില്ല. പേജ് റീലോഡ് ചെയ്ത് വീണ്ടും തിരഞ്ഞെടുക്കുക.",
+  retry: "വീണ്ടും ശ്രമിക്കുക",
+  language: "ഭാഷ",
+  noStops: "സ്റ്റോപ്പുകൾ ലഭ്യമല്ല. ഡാറ്റാബേസ് സെറ്റപ്പ് നടത്തുക (README കാണുക).",
+  dataTitle: "ഈ വിവരങ്ങളെക്കുറിച്ച്",
+  dataDemo: "ഡെമോ മാതൃക: ഉണ്ടാക്കിയ സമയവും നിരക്കുമുള്ള {n} ബസുകൾ.",
+  dataImported: "ഇറക്കുമതി ചെയ്തത്: കേരള പ്രൈവറ്റ് ബസ് ടൈമിംഗ് ഡാറ്റാസെറ്റിൽ നിന്നുള്ള {n} ബസുകൾ (സ്ഥിരീകരിച്ചിട്ടില്ല).",
+  dataImportedAt: "ഇറക്കുമതി ചെയ്ത തീയതി: {date}.",
+  dataUpstream:
+    "ആ ഡാറ്റാസെറ്റ് വിവരാവകാശ (RTI) PDF-ൽ നിന്ന് മാറ്റിയെടുത്തതാണ്; ഞങ്ങൾ പരിശോധിച്ചപ്പോൾ അത് അവസാനം പുതുക്കിയത് {date}-നാണ്. തെറ്റുകളും പഴയ വിവരങ്ങളും ഉണ്ടാകാം.",
+  dataVerified: "സ്ഥിരീകരിച്ചത്: {n} ബസുകൾ.",
+  dataFares: "നിരക്ക് രേഖപ്പെടുത്തിയിടത്ത് മാത്രം കാണിക്കുന്നു. ഒന്നും ഊഹിച്ച് നൽകുന്നില്ല.",
+  dataNoLicence: "സ്രോതസ്സ് ലൈസൻസ് വ്യക്തമാക്കുന്നില്ല.",
+  dataSource: "സ്രോതസ്സ്",
+  skipToResults: "ഫലങ്ങളിലേക്ക് പോകുക",
+  verifiedOn: "{date}-ന് സ്ഥിരീകരിച്ചു. ഒത്തുനോക്കിയത്: {source}",
+  fareVerifiedOn: "നിരക്ക് {date}-ന് സ്ഥിരീകരിച്ചു. ഒത്തുനോക്കിയത്: {source}",
+  errorRateLimited: "നിങ്ങൾ ഒരുപാട് അഭ്യർത്ഥനകൾ അയച്ചു. കുറച്ച് മിനിറ്റ് കാത്തിരുന്ന ശേഷം വീണ്ടും ശ്രമിക്കുക.",
+  errorPageTitle: "ഈ പേജ് കാണിക്കാൻ കഴിഞ്ഞില്ല",
+  errorPageBody: "ഞങ്ങളുടെ ഭാഗത്ത് എന്തോ പിശക് സംഭവിച്ചു. നിങ്ങളുടെ തിരച്ചിലുകളെ ഇത് ബാധിക്കില്ല. വീണ്ടും ശ്രമിക്കുക.",
+  notFoundTitle: "പേജ് കണ്ടെത്തിയില്ല",
+  notFoundBody: "ആ പേജ് കണ്ടെത്താനായില്ല.",
+  backToSearch: "തിരച്ചിലിലേക്ക് മടങ്ങുക",
+  reportProblem: "പ്രശ്നം അറിയിക്കുക",
+  reportTitle: "പ്രശ്നം അറിയിക്കുക",
+  reportIntro: "എന്താണ് തെറ്റെന്ന് ഞങ്ങളെ അറിയിക്കുക. ഓരോ അറിയിപ്പും ഒരാൾ വായിക്കും. പരിശോധിച്ച ശേഷം മാത്രമേ സമയക്രമം മാറ്റൂ.",
+  reportAbout: "വിഷയം",
+  reportKind: "എന്താണ് പ്രശ്നം?",
+  reportKindTiming: "ഒരു സമയം തെറ്റാണ്",
+  reportKindRoute: "ഒരു റൂട്ട് തെറ്റാണ് അല്ലെങ്കിൽ ഇല്ല",
+  reportKindStop: "ഒരു സ്റ്റോപ്പിന്റെ പേര് തെറ്റാണ്",
+  reportKindOther: "മറ്റെന്തെങ്കിലും",
+  reportMessage: "പ്രശ്നം വിവരിക്കുക",
+  reportMessageHint: "കുറഞ്ഞത് {n} അക്ഷരം വേണം. വ്യക്തിപരമായ വിവരങ്ങൾ ഇവിടെ എഴുതരുത്.",
+  reportSuggestion: "ശരിയായത് എന്താണ്? (ഓപ്ഷണൽ)",
+  reportContact: "നിങ്ങളുടെ ഫോൺ അല്ലെങ്കിൽ ഇമെയിൽ (ഓപ്ഷണൽ)",
+  reportContactHint: "ഞങ്ങൾ നിങ്ങളെ ബന്ധപ്പെടണമെങ്കിൽ മാത്രം. അറിയിപ്പുകൾ പരിശോധിക്കുന്നവർ മാത്രമേ ഇത് കാണൂ.",
+  reportSend: "അറിയിപ്പ് അയയ്ക്കുക",
+  reportSending: "അയയ്ക്കുന്നു…",
+  reportCancel: "റദ്ദാക്കുക",
+  reportClose: "അടയ്ക്കുക",
+  reportThanks: "നന്ദി. ഒരാൾ നിങ്ങളുടെ അറിയിപ്പ് പരിശോധിക്കും. പരിശോധിച്ച ശേഷം മാത്രമേ സമയക്രമം മാറ്റൂ.",
+  reportFailed: "നിങ്ങളുടെ അറിയിപ്പ് അയയ്ക്കാൻ കഴിഞ്ഞില്ല. വീണ്ടും ശ്രമിക്കുക.",
+  reportBusy: "ഇപ്പോൾ അറിയിപ്പുകൾ സ്വീകരിക്കാൻ കഴിയില്ല. പിന്നീട് വീണ്ടും ശ്രമിക്കുക.",
+  reportTimingShort: "തെറ്റായ സമയം അറിയിക്കുക",
+  reportRouteShort: "തെറ്റായതോ ഇല്ലാത്തതോ ആയ റൂട്ട് അറിയിക്കുക",
+  reportStopShort: "തെറ്റായ സ്റ്റോപ്പ് പേര് അറിയിക്കുക",
+  reportRoutePrompt: "ഒരു ബസോ റൂട്ടോ കാണുന്നില്ലേ?",
+  fieldRequired: "ഈ ഭാഗം പൂരിപ്പിക്കണം.",
+  fieldTooShort: "കുറഞ്ഞത് {n} അക്ഷരം എഴുതുക.",
+  fieldTooLong: "പരമാവധി {n} അക്ഷരം മാത്രം ഉപയോഗിക്കുക.",
+  fieldInvalid: "ഈ മൂല്യം സാധുവല്ല.",
+};
+
+export const dictionaries: Record<Lang, Record<TKey, string>> = { en, ml };
+
+export type Vars = Record<string, string | number>;
+
+export function translate(lang: Lang, key: TKey, vars?: Vars): string {
+  let s = dictionaries[lang][key] ?? dictionaries.en[key];
+  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
+  return s;
+}
+
+export const stopName = (s: Stop | undefined, lang: Lang): string =>
+  !s ? "" : lang === "ml" && s.nameMl ? s.nameMl : s.nameEn;
+
+export const statusKey = (s: DataStatus): TKey =>
+  s === "demo" ? "statusDemo" : s === "verified" ? "statusVerified" : "statusUnverified";
+
+export const statusLongKey = (s: DataStatus): TKey =>
+  s === "demo" ? "statusDemoLong" : s === "verified" ? "statusVerifiedLong" : "statusUnverifiedLong";
+
+/** minutes after midnight -> "7:05 AM" */
+export function formatTime(min: number): string {
+  const h24 = Math.floor(min / 60) % 24;
+  const m = min % 60;
+  const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+  return `${h12}:${String(m).padStart(2, "0")} ${h24 < 12 ? "AM" : "PM"}`;
+}
+
+/** 95 -> "1 h 35 min" (translated) */
+export function formatDuration(min: number, lang: Lang): string {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  const hr = translate(lang, "hr");
+  const mn = translate(lang, "min");
+  return h > 0 ? (m > 0 ? `${h} ${hr} ${m} ${mn}` : `${h} ${hr}`) : `${m} ${mn}`;
+}

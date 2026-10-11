@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --color-voyage-teal: #163d46;
+  --color-voyage-teal-dark: #0f2a30;
+  --color-voyage-sky: #a8d9df;
+  --color-voyage-sky-light: #e4f4f7;
+  --color-voyage-sand: #f5d9bd;
+  --color-voyage-sand-light: #fbf3ea;
+  --color-voyage-ivory: #f8f5ef;
+  --color-voyage-terracotta: #d98772;
+  --color-voyage-terracotta-dark: #b8624d;
+  --color-voyage-dark: #243238;
+  --color-voyage-muted: #566468;
+
+  /* Protected Kozhikode bus service colors */
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-500: #22a653;
+  --color-brand-600: #16883f;
+  --color-brand-700: #136b34;
+  --color-brand-900: #0d3b21;
+}
+
+/* Tailwind v4 draws borders in the text colour by default; use a soft warm border unless specified. */
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop {
+    border-color: #e5e2da;
+  }
+}
+
+/* Keyboard accessibility */
+:focus-visible {
+  outline: 3px solid #163d46;
+  outline-offset: 2px;
+}
+.bg-brand-600:focus-visible,
+.bg-brand-700:focus-visible,
+[class*="from-brand"] :focus-visible {
+  outline-color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #f8f5ef;
+  color: #243238;
+  font-family: system-ui, -apple-system, "Segoe UI", "Nirmala UI", "Noto Sans Malayalam", "Manjari", sans-serif;
+}
+
+/* Editorial styling utilities */
+.editorial-title {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  letter-spacing: -0.02em;
+}
+
+.card-hover-effect {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -8px rgba(22, 61, 70, 0.08);
+}
