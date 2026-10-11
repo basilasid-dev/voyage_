@@ -83,7 +83,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href={`/trips?destination=${d.id}#new-trip`}
-                className="inline-flex min-h-11 items-center rounded-xl bg-[#d98772] px-5 text-sm font-bold text-white shadow-md transition hover:bg-[#b8624d]"
+                className="inline-flex min-h-11 items-center rounded-xl bg-[#a8503a] px-5 text-sm font-bold text-white shadow-md transition hover:bg-[#8a4230]"
               >
                 Plan a Trip to {d.name} →
               </Link>
@@ -110,7 +110,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
       <section className="rounded-2xl border border-[#163d46]/10 bg-white p-6 sm:p-8 shadow-xs">
         <div className="grid gap-6 md:grid-cols-3">
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Atmosphere &amp; Vibe</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Atmosphere &amp; Vibe</h2>
             <p className="mt-2 text-sm leading-relaxed text-[#243238]">
               {isKozhikode
                 ? "Warm coastal golden light, rhythmic Arabian Sea breakers, coconut palm groves, and rich heritage streets perfumed by roasting spices."
@@ -118,7 +118,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
             </p>
           </div>
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Culinary Heritage</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Culinary Heritage</h2>
             <p className="mt-2 text-sm leading-relaxed text-[#243238]">
               {isKozhikode
                 ? "World-renowned Malabar Dum Biryani, pure coconut oil Kozhikode halwa, banana chips, fresh kallummakkaya seafood, and spiced Sulaimani."
@@ -126,7 +126,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
             </p>
           </div>
           <div>
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Planning Essentials</h2>
+            <h2 className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Planning Essentials</h2>
             <p className="mt-2 text-sm leading-relaxed text-[#243238]">
               {isKozhikode
                 ? "Currency: INR (₹). Evening beach visits around 5 PM are peak social hours. Auto-rickshaws and private buses are fast and frequent."
@@ -140,7 +140,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
       <section id="places-grid" className="space-y-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center border-b border-[#163d46]/10 pb-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Explore the Directory</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Explore the Directory</span>
             <h2 className="editorial-title text-2xl font-bold text-[#163d46] sm:text-3xl">Curated Places</h2>
           </div>
 
@@ -173,7 +173,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
       <section className="rounded-3xl border border-[#163d46]/15 bg-gradient-to-br from-[#fbf3ea] to-[#f8f5ef] p-6 sm:p-10 shadow-xs">
         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Culinary Spotlight</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Culinary Spotlight</span>
             <h2 className="editorial-title text-2xl font-bold text-[#163d46]">Food &amp; Dining Culture</h2>
           </div>
           <Link href={`/explore/${d.id}?show=food`} className="text-xs font-semibold text-[#163d46] hover:underline">
@@ -193,7 +193,7 @@ export default async function DestinationPage({ params, searchParams }: Props) {
         <section className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Traveller Field Notes</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Traveller Field Notes</span>
               <h2 className="editorial-title text-2xl font-bold text-[#163d46]">Community Tips for {d.name}</h2>
             </div>
             <Link href="/community" className="text-xs font-semibold text-[#163d46] hover:underline">

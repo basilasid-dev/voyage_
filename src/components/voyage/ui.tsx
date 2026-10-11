@@ -116,7 +116,7 @@ export function PlatformBadge({ platform }: { platform: string }) {
 /** Marks a figure as a rough planning estimate, never a quote */
 export function EstimateBadge() {
   return (
-    <span className="rounded bg-[#f5d9bd]/60 px-1.5 py-0.5 text-xs font-medium text-[#b8624d] ring-1 ring-[#d98772]/30">
+    <span className="rounded bg-[#f5d9bd]/60 px-1.5 py-0.5 text-xs font-medium text-[#9a4a36] ring-1 ring-[#d98772]/30">
       Estimate
     </span>
   );
@@ -193,7 +193,7 @@ export function DestinationCard({ d }: { d: Destination }) {
         <p className="line-clamp-3 text-sm leading-relaxed text-[#243238]">{d.summary}</p>
         <div className="mt-4 flex items-center justify-between border-t border-[#163d46]/10 pt-3 text-sm">
           <span className="font-semibold text-[#163d46]">{d.placeCount} curated places</span>
-          <span className="font-semibold text-[#d98772] group-hover:underline">Explore guide →</span>
+          <span className="font-semibold text-[#9a4a36] group-hover:underline">Explore guide →</span>
         </div>
       </div>
     </Link>

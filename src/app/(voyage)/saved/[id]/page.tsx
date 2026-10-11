@@ -28,7 +28,7 @@ export default async function EditSaved({ params }: { params: Promise<{ id: stri
       </p>
 
       <div className="border-b border-[#163d46]/10 pb-4">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Inspiration Editor</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Inspiration Editor</span>
         <h1 className="editorial-title mt-1 text-3xl font-extrabold text-[#163d46]">
           Edit Saved Item: {item.title}
         </h1>

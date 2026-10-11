@@ -58,7 +58,7 @@ function SavedCard({
             </span>
           )}
           {s.collectionName && (
-            <span className="rounded-full bg-[#f5d9bd]/40 px-2.5 py-0.5 text-xs font-semibold text-[#b8624d] ring-1 ring-[#d98772]/20">
+            <span className="rounded-full bg-[#f5d9bd]/40 px-2.5 py-0.5 text-xs font-semibold text-[#9a4a36] ring-1 ring-[#d98772]/20">
               📁 {s.collectionName}
             </span>
           )}
@@ -100,7 +100,7 @@ function SavedCard({
               href={s.url}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="inline-flex min-h-10 items-center font-bold text-[#163d46] hover:text-[#d98772] underline"
+              className="inline-flex min-h-10 items-center font-bold text-[#163d46] hover:text-[#9a4a36] underline"
             >
               Open original link ↗
             </a>

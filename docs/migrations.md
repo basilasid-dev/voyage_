@@ -77,3 +77,9 @@ Note that restoring discards everything entered after the upgrade (reports, revi
 ## Verified against real files
 
 The migration test suite (`tests/migrations.test.ts`) builds a database exactly as phases 1 to 3 left it, upgrades it, and compares every row of every table before and after. A copy of the real working database (11 stops, 6 services, 30 trips, 142 trip stops, 52 fares) was also upgraded with identical counts and a `.pre-v2.bak` backup was written.
+
+## Version 4 and 5 (Voyage community, Reel-to-Travel)
+
+- **v4** adds `community_posts`, `community_reports`, `saved_items.tags` and `voyage_activities.start_time`.
+- **v5** adds `reel_captures`, `reel_candidates`, `community_votes`, `saved_items.capture_id`, approximate `places.lat/lng` and the visit-detail and owner columns on community posts and reports, with a unique index so one visitor can report a post once. It also **deletes the six invented starter posts** earlier versions seeded (matched on exact author and title, only rows with no owner and marked verified). Real posts are untouched. Only additions and that one deletion; the bus tables keep their exact shape (tested in `tests/migration-v5.test.ts`).
+- A backup `<file>.pre-v5.bak` is written before upgrading a file database. To go back, stop the app and restore it as described above; this discards anything entered after the upgrade.

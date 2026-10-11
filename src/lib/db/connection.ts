@@ -2,6 +2,7 @@
 // CLI scripts. Never import this from a client component.
 import Database from "better-sqlite3";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { LATEST_VERSION, migrate } from "./migrations";
 import { seedVoyageContent } from "../voyage/seed";
@@ -10,7 +11,10 @@ import { seedDemoData } from "./seed";
 const globalForDb = globalThis as unknown as { __calicutDb?: { db: Database.Database; version: number } };
 
 export function dbPath(): string {
-  return process.env.DATABASE_PATH ?? path.join(process.cwd(), "data", "calicut-bus.db");
+  if (process.env.DATABASE_PATH) return process.env.DATABASE_PATH;
+  // Vercel's deployment folder is read-only; only the temp folder is writable (and it is NOT persistent, see README).
+  if (process.env.VERCEL) return path.join(os.tmpdir(), "calicut-bus.db");
+  return path.join(process.cwd(), "data", "calicut-bus.db");
 }
 
 export function openDb(file = dbPath()): Database.Database {

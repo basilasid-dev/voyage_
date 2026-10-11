@@ -18,7 +18,7 @@ export default function ExplorePage() {
     <div className="space-y-12">
       {/* Editorial Header */}
       <div className="border-b border-[#163d46]/10 pb-8">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Discovery &amp; Guides</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Discovery &amp; Guides</span>
         <h1 className="editorial-title mt-2 text-4xl font-extrabold tracking-tight text-[#163d46] sm:text-5xl">
           Where to next?
         </h1>
@@ -38,7 +38,7 @@ export default function ExplorePage() {
       <section className="rounded-3xl border border-[#163d46]/15 bg-white p-6 sm:p-8 shadow-xs">
         <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Curated Itinerary Trails</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Curated Itinerary Trails</span>
             <h2 className="editorial-title text-2xl font-bold text-[#163d46]">Suggested Experiences</h2>
           </div>
           <Link href="/reel-to-travel" className="text-xs font-semibold text-[#163d46] hover:underline">
@@ -53,7 +53,7 @@ export default function ExplorePage() {
             <p className="mt-1 text-xs text-[#566468]">
               Afternoon shopping along Sweet Meat Street followed by evening tea and pickled mango on Kozhikode Beach.
             </p>
-            <Link href="/explore/kozhikode" className="mt-3 inline-block text-xs font-semibold text-[#d98772] hover:underline">
+            <Link href="/explore/kozhikode" className="mt-3 inline-block text-xs font-semibold text-[#9a4a36] hover:underline">
               View spots in Kozhikode →
             </Link>
           </div>
@@ -64,7 +64,7 @@ export default function ExplorePage() {
             <p className="mt-1 text-xs text-[#566468]">
               Start at Galata Tower, cross to Karaköy for warm pistachio baklava, then catch the sunset ferry to Kadıköy.
             </p>
-            <Link href="/explore/istanbul" className="mt-3 inline-block text-xs font-semibold text-[#d98772] hover:underline">
+            <Link href="/explore/istanbul" className="mt-3 inline-block text-xs font-semibold text-[#9a4a36] hover:underline">
               View spots in Istanbul →
             </Link>
           </div>
@@ -75,7 +75,7 @@ export default function ExplorePage() {
             <p className="mt-1 text-xs text-[#566468]">
               From the wooden multi-tiered Mishkal Mosque in Kuttichira to the imperial grandeur of Hagia Sophia.
             </p>
-            <Link href="/explore" className="mt-3 inline-block text-xs font-semibold text-[#d98772] hover:underline">
+            <Link href="/explore" className="mt-3 inline-block text-xs font-semibold text-[#9a4a36] hover:underline">
               Compare architectural styles →
             </Link>
           </div>

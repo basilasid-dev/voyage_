@@ -67,7 +67,7 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:hidden">
           <Link
             href="/reel-to-travel"
-            className="rounded-lg bg-[#d98772] px-2.5 py-1 text-xs font-semibold text-white hover:bg-[#b8624d]"
+            className="rounded-lg bg-[#a8503a] px-2.5 py-1 text-xs font-semibold text-white hover:bg-[#8a4230]"
           >
             + Save Reel
           </Link>

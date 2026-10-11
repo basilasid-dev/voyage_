@@ -45,7 +45,7 @@ export default async function MyVoyagePage() {
       {/* Editorial Dashboard Header */}
       <div className="flex flex-col justify-between gap-4 border-b border-[#163d46]/10 pb-6 sm:flex-row sm:items-end">
         <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Personal Travel HQ</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Personal Travel HQ</span>
           <h1 className="editorial-title mt-1 text-3xl font-extrabold text-[#163d46] sm:text-4xl">
             My Voyage Dashboard
           </h1>
@@ -56,7 +56,7 @@ export default async function MyVoyagePage() {
         <div className="flex flex-wrap gap-2">
           <Link
             href="/reel-to-travel"
-            className="inline-flex min-h-10 items-center rounded-xl bg-[#d98772] px-4 text-xs font-bold text-white shadow-xs hover:bg-[#b8624d]"
+            className="inline-flex min-h-10 items-center rounded-xl bg-[#a8503a] px-4 text-xs font-bold text-white shadow-xs hover:bg-[#8a4230]"
           >
             + Save New Reel / Idea
           </Link>
@@ -85,7 +85,7 @@ export default async function MyVoyagePage() {
         </div>
         <div className="rounded-2xl border border-[#163d46]/10 bg-white p-4 shadow-xs">
           <span className="text-xs font-semibold text-[#566468]">Estimated Budget</span>
-          <p className="editorial-title mt-1 text-xl font-bold text-[#b8624d]">
+          <p className="editorial-title mt-1 text-xl font-bold text-[#9a4a36]">
             <MoneyTotals totals={overallTotals} empty="0" />
           </p>
         </div>
@@ -95,7 +95,7 @@ export default async function MyVoyagePage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Itineraries</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Itineraries</span>
             <h2 className="editorial-title text-2xl font-bold text-[#163d46]">My Planned Trips</h2>
           </div>
           <Link href="/trips" className="text-xs font-semibold text-[#163d46] hover:underline">
@@ -148,7 +148,7 @@ export default async function MyVoyagePage() {
                   <span className="font-semibold text-[#163d46]">
                     {t.activityCount} planned place{t.activityCount === 1 ? "" : "s"}
                   </span>
-                  <span className="font-bold text-[#d98772]">Open itinerary →</span>
+                  <span className="font-bold text-[#9a4a36]">Open itinerary →</span>
                 </div>
               </Link>
             ))}
@@ -160,7 +160,7 @@ export default async function MyVoyagePage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Saved Boards</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Saved Boards</span>
             <h2 className="editorial-title text-2xl font-bold text-[#163d46]">Saved Inspiration</h2>
           </div>
           <Link href="/reel-to-travel" className="text-xs font-semibold text-[#163d46] hover:underline">
@@ -178,7 +178,7 @@ export default async function MyVoyagePage() {
             <div className="mt-4">
               <Link
                 href="/reel-to-travel"
-                className="inline-flex min-h-10 items-center rounded-xl bg-[#d98772] px-5 text-xs font-bold text-white hover:bg-[#b8624d]"
+                className="inline-flex min-h-10 items-center rounded-xl bg-[#a8503a] px-5 text-xs font-bold text-white hover:bg-[#8a4230]"
               >
                 + Save First Idea
               </Link>
@@ -196,7 +196,7 @@ export default async function MyVoyagePage() {
                     <CategoryBadge category={s.category} />
                     <PlatformBadge platform={s.platform} />
                     {s.collectionName && (
-                      <span className="rounded-full bg-[#f5d9bd]/40 px-2 py-0.5 text-[10px] font-semibold text-[#b8624d]">
+                      <span className="rounded-full bg-[#f5d9bd]/40 px-2 py-0.5 text-[10px] font-semibold text-[#9a4a36]">
                         📁 {s.collectionName}
                       </span>
                     )}
@@ -252,7 +252,7 @@ export default async function MyVoyagePage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {recentlySavedPlaces.map((p) => (
               <div key={p.id} className="rounded-2xl border border-[#163d46]/10 bg-white p-4 shadow-xs">
-                <span className="text-xs font-semibold text-[#d98772]">{p.destinationName}</span>
+                <span className="text-xs font-semibold text-[#9a4a36]">{p.destinationName}</span>
                 <h3 className="editorial-title mt-1 text-sm font-bold text-[#243238]">{p.title}</h3>
                 {p.durationMin && <p className="mt-1 text-xs text-[#566468]">⏱ {formatDuration(p.durationMin)}</p>}
                 {p.costCents !== null && p.currency && (
@@ -268,7 +268,7 @@ export default async function MyVoyagePage() {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-[#d98772]">Inspiration Feed</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#9a4a36]">Inspiration Feed</span>
             <h2 className="editorial-title text-2xl font-bold text-[#163d46]">Community Recommendations</h2>
           </div>
           <Link href="/community" className="text-xs font-semibold text-[#163d46] hover:underline">

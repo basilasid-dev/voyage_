@@ -27,7 +27,7 @@ export default async function Trips({ searchParams }: { searchParams: Promise<{ 
     <div className="space-y-10">
       {/* Editorial Header */}
       <div className="border-b border-[#163d46]/10 pb-6">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Itinerary Architect</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Itinerary Architect</span>
         <h1 className="editorial-title mt-2 text-3xl font-extrabold text-[#163d46] sm:text-4xl">
           Your Planned Journeys
         </h1>
@@ -66,7 +66,7 @@ export default async function Trips({ searchParams }: { searchParams: Promise<{ 
                   <span className="font-semibold text-[#163d46]">
                     {t.activityCount} planned activity{t.activityCount === 1 ? "" : "ies"}
                   </span>
-                  <span className="font-bold text-[#d98772] group-hover:underline">Open itinerary planner →</span>
+                  <span className="font-bold text-[#9a4a36] group-hover:underline">Open itinerary planner →</span>
                 </div>
               </Link>
             </li>

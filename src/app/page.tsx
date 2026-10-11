@@ -75,7 +75,7 @@ export default async function HomePage() {
                       />
                       <button
                         type="submit"
-                        className="rounded-xl bg-[#d98772] px-5 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#b8624d] shrink-0"
+                        className="rounded-xl bg-[#a8503a] px-5 py-2.5 text-xs font-bold text-white shadow-md transition hover:bg-[#8a4230] shrink-0"
                       >
                         Save Reel →
                       </button>
@@ -100,14 +100,14 @@ export default async function HomePage() {
         <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Cinematic Explorations</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Cinematic Explorations</span>
               <h2 className="editorial-title mt-1 text-3xl font-bold tracking-tight text-[#163d46] sm:text-4xl">
                 Featured Destinations
               </h2>
             </div>
             <Link
               href="/explore"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#163d46] hover:text-[#d98772]"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#163d46] hover:text-[#9a4a36]"
             >
               View all destination guides <span aria-hidden>→</span>
             </Link>
@@ -157,7 +157,7 @@ export default async function HomePage() {
                   </Link>
                   <Link
                     href="/trips?destination=kozhikode#new-trip"
-                    className="text-xs font-semibold text-[#d98772] hover:underline"
+                    className="text-xs font-semibold text-[#9a4a36] hover:underline"
                   >
                     + Plan a trip
                   </Link>
@@ -194,10 +194,10 @@ export default async function HomePage() {
                   Straddling Europe and Asia across the glittering Bosphorus, Istanbul captivates with monumental Byzantine basilicas, Ottoman palace courtyards, bustling spice markets, and waterfront fish sandwiches by Galata Bridge.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#b8624d]">Galata Tower</span>
-                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#b8624d]">Hagia Sophia</span>
-                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#b8624d]">Grand Bazaar</span>
-                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#b8624d]">Karaköy Baklava</span>
+                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#9a4a36]">Galata Tower</span>
+                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#9a4a36]">Hagia Sophia</span>
+                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#9a4a36]">Grand Bazaar</span>
+                  <span className="rounded-md bg-[#fbf3ea] px-2 py-1 font-medium text-[#9a4a36]">Karaköy Baklava</span>
                 </div>
                 <div className="mt-6 flex items-center justify-between border-t border-[#163d46]/10 pt-4">
                   <Link
@@ -208,7 +208,7 @@ export default async function HomePage() {
                   </Link>
                   <Link
                     href="/trips?destination=istanbul#new-trip"
-                    className="text-xs font-semibold text-[#d98772] hover:underline"
+                    className="text-xs font-semibold text-[#9a4a36] hover:underline"
                   >
                     + Plan a trip
                   </Link>
@@ -222,7 +222,7 @@ export default async function HomePage() {
         <section className="bg-[#f2eee6] py-16 sm:py-24">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="text-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Curated Lenses</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Curated Lenses</span>
               <h2 className="editorial-title mt-1 text-3xl font-bold tracking-tight text-[#163d46] sm:text-4xl">
                 Explore by Experience
               </h2>
@@ -283,7 +283,7 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
                   href="/reel-to-travel"
-                  className="inline-flex min-h-12 items-center rounded-xl bg-[#d98772] px-6 text-sm font-bold text-white shadow-md transition hover:bg-[#b8624d]"
+                  className="inline-flex min-h-12 items-center rounded-xl bg-[#a8503a] px-6 text-sm font-bold text-white shadow-md transition hover:bg-[#8a4230]"
                 >
                   Open Reel-to-Travel →
                 </Link>
@@ -311,9 +311,9 @@ export default async function HomePage() {
                 </div>
               ) : (
                 <ol className="space-y-4 text-sm text-white/90">
-                  <li className="flex gap-3"><span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d98772] text-xs font-bold">1</span><span><strong>Paste</strong> a Reel, pin or video link, or the caption you copied.</span></li>
-                  <li className="flex gap-3"><span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d98772] text-xs font-bold">2</span><span><strong>Review</strong> the places it found, with how sure it is and why. Correct anything.</span></li>
-                  <li className="flex gap-3"><span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#d98772] text-xs font-bold">3</span><span><strong>Save</strong> them to a collection, then <strong>plan</strong> them onto the days of a trip.</span></li>
+                  <li className="flex gap-3"><span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#a8503a] text-xs font-bold">1</span><span><strong>Paste</strong> a Reel, pin or video link, or the caption you copied.</span></li>
+                  <li className="flex gap-3"><span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#a8503a] text-xs font-bold">2</span><span><strong>Review</strong> the places it found, with how sure it is and why. Correct anything.</span></li>
+                  <li className="flex gap-3"><span aria-hidden className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#a8503a] text-xs font-bold">3</span><span><strong>Save</strong> them to a collection, then <strong>plan</strong> them onto the days of a trip.</span></li>
                 </ol>
               )}
             </div>
@@ -325,14 +325,14 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Real Travellers</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Real Travellers</span>
                 <h2 className="editorial-title mt-1 text-3xl font-bold tracking-tight text-[#163d46] sm:text-4xl">
                   Community Travel Stories &amp; Tips
                 </h2>
               </div>
               <Link
                 href="/community"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#163d46] hover:text-[#d98772]"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#163d46] hover:text-[#9a4a36]"
               >
                 Share your experience <span aria-hidden>→</span>
               </Link>

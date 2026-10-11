@@ -5,6 +5,7 @@ import {
   addCustomActivityAction,
   addExpenseAction,
   addToTripAction,
+  applyOrderAction,
   deleteTripAction,
   moveActivityAction,
   moveActivityDayAction,
@@ -30,7 +31,7 @@ import { CURRENCIES } from "@/lib/voyage/content";
 import { currentOwner } from "@/lib/voyage/owner";
 import { listDestinations, listPlaces } from "@/lib/voyage/places";
 import { listSaved } from "@/lib/voyage/saved";
-import { getTrip, type Activity, type Expense, type TripDetail } from "@/lib/voyage/trips";
+import { getTrip, suggestOrder, type Activity, type Expense, type TripDetail } from "@/lib/voyage/trips";
 import { CATEGORIES, EXPENSE_CATEGORIES, formatDuration, formatMoney } from "@/lib/voyage/validate";
 
 export const dynamic = "force-dynamic";
@@ -89,6 +90,7 @@ function ActivityRow({
           </div>
           {a.location && <p className="mt-0.5 text-xs text-[#566468]">📍 {a.location}</p>}
           <p className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-medium text-[#243238]">
+            {a.startTime && <span>🕘 Starts {a.startTime}</span>}
             {a.durationMin && <span>⏱ Est. {formatDuration(a.durationMin)}</span>}
             {a.costCents !== null && a.currency && (
               <span className="inline-flex items-center gap-1.5">
@@ -182,6 +184,9 @@ function ActivityFields({ a, currency }: { a?: Activity; currency: string }) {
       <Field label="Location">
         <input name="location" maxLength={160} defaultValue={a?.location ?? ""} placeholder="e.g. Beach Road, Kozhikode" className={inputClass} />
       </Field>
+      <Field label="Start time (optional)">
+        <input name="startTime" type="time" defaultValue={a?.startTime ?? ""} className={inputClass} />
+      </Field>
       <Field label="Duration (minutes)">
         <input name="durationMin" type="number" min={1} max={1440} inputMode="numeric" defaultValue={a?.durationMin ?? ""} placeholder="e.g. 90" className={inputClass} />
       </Field>
@@ -263,7 +268,7 @@ function ExpenseRow({ e, tripId, days, currency }: { e: Expense; tripId: number;
           </span>
           {e.notes && <div className="text-xs text-[#566468] mt-0.5">{e.notes}</div>}
         </div>
-        <div className="editorial-title font-bold text-sm text-[#b8624d]">
+        <div className="editorial-title font-bold text-sm text-[#9a4a36]">
           {formatMoney(e.amountCents, e.currency)}
         </div>
       </div>
@@ -363,8 +368,8 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
             </dd>
           </div>
           <div className="rounded-xl border border-[#d98772]/20 bg-[#fbf3ea] p-3.5">
-            <dt className="text-[#b8624d]">Total Estimated Budget</dt>
-            <dd className="editorial-title mt-1 text-lg font-bold text-[#b8624d]">
+            <dt className="text-[#9a4a36]">Total Estimated Budget</dt>
+            <dd className="editorial-title mt-1 text-lg font-bold text-[#9a4a36]">
               <MoneyTotals totals={totals.combined} />
             </dd>
           </div>
@@ -385,9 +390,8 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
           const dayTotal = { ...d.totals.activities };
           for (const [c, v] of Object.entries(d.totals.expenses)) dayTotal[c] = (dayTotal[c] ?? 0) + v;
 
-          // Day duration calculation & schedule overload / overlap check
+          // Day duration (overlap and overload warnings come from d.warnings)
           const dayDurationMin = d.activities.reduce((acc, curr) => acc + (curr.durationMin ?? 0), 0);
-          const isHeavySchedule = dayDurationMin >= 480; // >= 8 hours of activities in one day
 
           return (
             <section
@@ -413,14 +417,43 @@ export default async function TripPage({ params }: { params: Promise<{ id: strin
                 </div>
               </div>
 
-              {/* Overlap / Heavy Schedule Alert */}
-              {isHeavySchedule && (
-                <div className="mt-3">
-                  <ScheduleAlertBadge
-                    message={`Heavy schedule detected: ${formatDuration(dayDurationMin)} planned on Day ${d.day}. Remember to leave room for transport and leisure.`}
-                  />
+              {d.warnings.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {d.warnings.map((w) => (
+                    <ScheduleAlertBadge key={w} message={w} />
+                  ))}
                 </div>
               )}
+
+              {d.activities.length >= 3 && (() => {
+                const sug = suggestOrder(db, owner, trip.id, d.day);
+                const titleOf = new Map(d.activities.map((x) => [x.id, x.title]));
+                return (
+                  <details className="mt-3 rounded-2xl border border-[#163d46]/15 bg-[#f8f5ef]">
+                    <summary className="min-h-11 cursor-pointer px-4 py-3 text-xs font-bold text-[#163d46]">🧭 Suggest a visiting order</summary>
+                    <div className="space-y-2 border-t border-[#163d46]/10 p-4 text-xs text-[#243238]">
+                      <p>{sug.note}</p>
+                      {sug.totalKm !== null && (
+                        sug.changed ? (
+                          <>
+                            <ol className="list-decimal space-y-0.5 pl-5">
+                              {sug.order.map((oid) => <li key={oid}>{titleOf.get(oid)}</li>)}
+                            </ol>
+                            <p>About {sug.totalKm} km in a straight line between the places that have a known location.</p>
+                            <ActionForm action={applyOrderAction} submitLabel="Use this order" tone="neutral" compact>
+                              <input type="hidden" name="tripId" value={trip.id} />
+                              <input type="hidden" name="day" value={d.day} />
+                              <input type="hidden" name="ids" value={sug.order.join(",")} />
+                            </ActionForm>
+                          </>
+                        ) : (
+                          <p className="font-semibold">Your current order is already the shortest this method finds.</p>
+                        )
+                      )}
+                    </div>
+                  </details>
+                );
+              })()}
 
               {/* Activities on this day */}
               {d.activities.length === 0 ? (

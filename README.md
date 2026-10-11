@@ -1,10 +1,8 @@
-# Calicut Bus Guide · കാലിക്കറ്റ് ബസ് ഗൈഡ്
+# Voyage
 
-Next.js app with two parts: a mobile-first **bus guide** for private bus routes, timings and fares in Kozhikode, Kerala (English and Malayalam, with an admin area where a person checks the data before passengers are told it is verified), and **Voyage**, a small travel-planning service for Kozhikode and Istanbul (destinations, saved inspiration and a day-by-day trip planner).
+A small travel-planning service for **Kozhikode, India** and **Istanbul, Türkiye**: browse destinations, save inspiration from links and reels, and build a day-by-day trip plan with estimated costs. It also includes the **Calicut Bus Guide** (കാലിക്കറ്റ് ബസ് ഗൈഡ്), a mobile-first guide to private bus routes, timings and fares in Kozhikode (English and Malayalam), with an admin area for checking its data.
 
-> **All bundled data is DEMO data.** The stops are real place names, but every timetable and fare is invented so the app works out of the box. Every result is labelled "Demo data" in the UI, and demo data can never be marked verified. Do not use it for real travel.
->
-> The app shows **scheduled timetables only**: no live tracking and no real-time arrival information. A fare appears only where one is recorded together with its source; none is ever calculated or estimated.
+> **Content is estimates and demo data.** Voyage's destination content is general knowledge written for this project (rough visit times and costs, not live data). The bus guide's bundled timetables and fares are **invented demo data** (the stops are real place names), labelled "Demo data" in the UI, and can never be marked verified. Do not use either for real travel decisions without checking current information.
 
 ## Stack
 
@@ -16,7 +14,7 @@ Requires Node.js 20+ and pnpm (`npm i -g pnpm` or `corepack enable`).
 
 ```bash
 pnpm install
-pnpm db:init     # optional: creates/upgrades data/calicut-bus.db and the demo seed
+pnpm db:init     # optional: creates/upgrades data/calicut-bus.db and the seed content
 pnpm dev         # http://localhost:3000
 ```
 
@@ -31,28 +29,16 @@ The database is also created and upgraded automatically the first time the serve
 | `pnpm dev` / `build` / `start` | Next.js dev server / production build / serve the build |
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm test` | Unit tests (Node's built-in runner, in-memory SQLite) |
-| `pnpm db:init` | Create or upgrade the database and the demo seed (safe to repeat) |
+| `pnpm db:init` | Create or upgrade the database and the seed (safe to repeat) |
 | `pnpm db:reset` | Delete the database file and recreate it |
 | `pnpm db:import <file>` | Import the Kerala Private Bus dataset from a local file |
 | `pnpm admin:hash` | Create the value for `ADMIN_PASSWORD_HASH` |
 
-Environment variables (see `.env.example`; put real values in `.env.local`, which is git-ignored): `DATABASE_PATH`, `NEXT_DIST_DIR`, `ADMIN_PASSWORD_HASH`, `ADMIN_NAME`, and for local development only `ADMIN_PASSWORD`.
+Environment variables (see `.env.example`; put real values in `.env.local`, which is git-ignored): `DATABASE_PATH`, `NEXT_DIST_DIR`, `ADMIN_PASSWORD_HASH`, `ADMIN_NAME`, `VOYAGE_DISABLE_FETCH`, and for local development only `ADMIN_PASSWORD`.
 
-## For passengers
+## Pages
 
-Pick **From** and **To** by typing (spelling variations such as "kozhikode"/"calicut" and typos such as "medicl" work). ⇅ swaps them. Optionally set **Leave after** (or press **Now**), then **Find My Bus**.
-
-- **Direct buses** and **buses with one change** show boarding and drop-off stops, times, duration, stops and fare.
-- Every bus and fare carries a badge: **Demo data** (invented), **Unverified** (imported, not checked) or **Verified**. A verified bus also says when it was verified and against what ("Verified on 2026-10-12 against: operator timetable").
-- If a fare is not recorded: "Fare not available". The app never estimates one.
-- **Report a problem**: every bus has a "Report a wrong time" button; empty results and the results list offer "Report a wrong or missing route"; a "Report a wrong stop name" link sits under the data panel. The form is a modal dialog (a bottom sheet on phones), works in both languages and with the keyboard, and asks for no personal details. A contact phone or email is optional and is seen only by people who review reports. Nothing changes on the timetable until an admin has checked it.
-- The **About this data** panel shows what is loaded, the import date and the upstream dataset's date.
-- Searches are shareable links: `/?from=beypore&to=medical-college&after=07:00`.
-- Language switch (മലയാളം / English) in the header, remembered per browser.
-
-## Voyage: destinations, saved inspiration and trip planner
-
-Separate from the bus service (which is unchanged and still lives at `/`), these pages help plan a trip. They are English only and are not linked from the bus pages.
+`/` is the Voyage landing page. The travel pages are English only.
 
 | Page | What it does |
 | --- | --- |
@@ -63,22 +49,93 @@ Separate from the bus service (which is unchanged and still lives at `/`), these
 | `/saved/<id>` | Edit or delete one saved item. |
 | `/trips` | Your trips; create one with a name, destination, dates and budget currency. |
 | `/trips/<id>` | The plan, one section per day: add saved places, curated places or custom activities; **edit, remove, reorder (↑ ↓) and move activities between days**; record **estimated expenses** (per day or for the whole trip); a budget summary with totals per currency; change the dates or delete the trip. |
+| `/reel-to-travel` | Turn a link or caption into a list of places (see below). |
+| `/community` | Contributions from other travellers (see below). |
+| `/bus-guide` | The Calicut Bus Guide (see below). |
+| `/admin` | Admin area for the bus guide and community moderation (see below). |
 
-How it behaves:
+## How Voyage behaves
 
 - **Everything is a working feature.** Every button saves to the database; there are no placeholders. Tests and a browser run cover each action.
 - **No accounts.** The first time you save something, the browser gets a random private token in an `HttpOnly` cookie (`voyage_owner`, one year). The database stores only its SHA-256. Your saved items and trips belong to that browser: nobody else can read, change or delete them (another person asking for your trip or item gets the same 404 as for a missing one). Clearing cookies or using another browser or device starts an empty list; there is no sync. Browsing destinations sets no cookie.
-- **Links are only stored and linked, never fetched.** Only `http`/`https` links are accepted (`javascript:`, `data:`, `file:` and links with a username or password are refused), the platform is recognised from the real domain (`pinterest.com.evil.example` is not Pinterest), and links open in a new tab with `noopener noreferrer nofollow`. The app calls no external API and uses no extra dependency.
+- **Saving a link only stores it; reading it is a separate, explicit step in Reel-to-Travel.** Only `http`/`https` links are accepted (`javascript:`, `data:`, `file:` and links with a username or password are refused), the platform is recognised from the real domain (`pinterest.com.evil.example` is not Pinterest), and links open in a new tab with `noopener noreferrer nofollow`. No extra dependency and no AI service is used.
 - **An activity is a copy.** Adding a saved item or place to a day copies its details, so editing or deleting the original later never changes a plan.
 - **Money is estimates, per currency.** Amounts are stored as integer cents. Totals are kept separately for each currency and **nothing is converted**, because no exchange rates are used. Every cost range on a place is labelled **Estimate**. Istanbul figures are given in euros because lira prices change quickly. All limits (500 saved items, 30 collections, 50 trips, 300 activities and 500 expenses per trip, 60-day trips) are enforced on the server.
 - **The curated content is general knowledge, not live data.** It lives in `src/lib/voyage/content.ts` (6 Kozhikode landmarks and 3 food places, 5 Istanbul landmarks and 3 food places) and is copied into the database on start-up. The descriptions, durations and costs are rough planning estimates written for this project and have not been verified against live sources: opening rules, tickets and prices change, and the pages say so. Please review and correct them before relying on them publicly.
-- **Pictures are original illustrations, not photographs.** `node scripts/make-images.mjs` generates the SVGs in `public/img` (about 26 KB in total). To use real photographs, add licensed files to `public/img` and change the `image` paths in `content.ts`.
+- **Pictures.** Local SVG illustrations (`node scripts/make-images.mjs`, in `public/img`) are the fallback. Destination and place cards try a remote Unsplash photo first (`src/lib/voyage/photography.ts`, credited on the card); if it fails to load, or a place has none, the illustration is shown. The photo URLs were checked to return an image, but nobody has confirmed each one shows exactly the named place.
 
 Database (migration v3, see [docs/migrations.md](docs/migrations.md)): `destinations`, `places`, `collections`, `saved_items`, `voyage_trips`, `voyage_activities`, `voyage_expenses`. The names deliberately avoid the bus service's `trips` table; the migration only adds tables, and a test checks that the bus tables keep their exact shape.
 
+## Reel-to-Travel (`/reel-to-travel`)
+
+Paste a link (Instagram, TikTok, YouTube, Pinterest, Vimeo or any page) and/or the caption, and get a list of the places it seems to mention.
+
+1. **Read.** The platform is recognised from the real domain. For allowlisted hosts the server makes one small public request (https only, redirects re-checked against the allowlist, 6 s timeout, 512 KB cap, no cookies, no private addresses): oEmbed for YouTube, Vimeo and TikTok; OpenGraph tags for Pinterest and Instagram. The result is labelled honestly: *retrieved*, *partial*, *blocked*, *unavailable* or *skipped*. Instagram and TikTok usually refuse anonymous readers, so **pasting the caption is the dependable path** and is always offered. Set `VOYAGE_DISABLE_FETCH=1` to make no outbound request at all.
+2. **Find places.** A rule-based finder (no AI, no paid API) reads the title, description and caption. Each suggestion shows a confidence (**high**: matches a curated place or alias; **medium**: a 📍 pin, list item or hashtag; **low**: a capitalised phrase near a food or activity word) and the exact text it came from. Nothing found is reported as nothing found. Screenshots are not read (no OCR).
+3. **Confirm.** Select the places that are right, correct names, category and destination, add notes and tags, add places that were missed, and choose a collection (existing or new). A place already in your library is linked, never duplicated.
+4. **Plan.** Add the confirmed places to a trip day in one step. A place already planned in that trip is refused.
+
+Planning extras: start times with overlap and overfull-day warnings, a *planned / unplanned* status on every saved item, and a **suggested visiting order** per day (nearest neighbour over the approximate coordinates of curated places; it is a proposal you apply, needs at least three located places, and uses straight-line distance only).
+
+## Community (`/community`)
+
+Real contributions only. There are no seeded users, ratings or likes (migration v5 deletes the six invented starter posts earlier versions inserted). A contribution has an optional display name, a destination and optional place, and optional visit date, time needed, approximate spend and best time. One *helpful* vote per visitor (not on your own post), one report per visitor, three different reporters hide a post until an admin decides, 5 posts a day per visitor, a honeypot against bots, and admin moderation at `/admin/community` (hide, restore, dismiss; every decision is audited). Every contribution is labelled **unverified**, because the app cannot prove a visit. Photo uploads are not supported.
+
+## Calicut Bus Guide (`/bus-guide`)
+
+A mobile-first guide to private bus routes, timings and fares in Kozhikode, Kerala, in English and Malayalam. An admin checks the data before passengers are told it is verified.
+
+> **All bundled bus data is DEMO data.** Every timetable and fare is invented so the app works out of the box.
+>
+> The app shows **scheduled timetables only**: no live tracking and no real-time arrival information. A fare appears only where one is recorded together with its source; none is ever calculated or estimated.
+
+### For passengers
+
+Pick **From** and **To** by typing (spelling variations such as "kozhikode"/"calicut" and typos such as "medicl" work). ⇅ swaps them. Optionally set **Leave after** (or press **Now**), then **Find My Bus**.
+
+- **Direct buses** and **buses with one change** show boarding and drop-off stops, times, duration, stops and fare.
+- Every bus and fare carries a badge: **Demo data** (invented), **Unverified** (imported, not checked) or **Verified**. A verified bus also says when it was verified and against what ("Verified on 2026-10-12 against: operator timetable").
+- If a fare is not recorded: "Fare not available". The app never estimates one.
+- **Report a problem**: every bus has a "Report a wrong time" button; empty results and the results list offer "Report a wrong or missing route"; a "Report a wrong stop name" link sits under the data panel. The form is a modal dialog (a bottom sheet on phones), works in both languages and with the keyboard, and asks for no personal details. A contact phone or email is optional and is seen only by people who review reports. Nothing changes on the timetable until an admin has checked it.
+- The **About this data** panel shows what is loaded, the import date and the upstream dataset's date.
+- Searches are shareable links: `/bus-guide?from=beypore&to=medical-college&after=07:00`.
+- Language switch (മലയാളം / English) in the header, remembered per browser.
+
+### Data model and provenance
+
+Every stop, bus and fare has `data_status` (`demo`, `unverified`, `verified`), `source`, and, once reviewed, `verified_at`, `verified_by`, `verified_source`, `review_note`, `updated_at`. Buses and fares can also be `rejected`. Trips take the status of their bus. Details and the migration history: [docs/migrations.md](docs/migrations.md).
+
+### Importing real data: Kerala Private Bus Timing
+
+**This project never downloads the dataset for you.** The upstream data has no licence, so getting it, and the right to use or share it, is your decision. The file is not in this repository and `data/*.db` is git-ignored; do not commit a database built from it unless you have permission.
+
+What exists (checked 2026-10):
+
+- There is no hosted API. The data is the community repo [amith-vp/Kerala-Private-Bus-Timing](https://github.com/amith-vp/Kerala-Private-Bus-Timing): static JSON files, including `kozhikkode.json` (double "k"), converted from RTI-obtained PDFs.
+- `kozhikkode.json` (about 4 MB) has 647 buses, 9,290 trips and 401 distinct station names.
+- No licence is stated. Last commit 2024-09-03; the schedules come from an RTI request and may be out of date. No fares are included.
+- Its README warns of PDF-parsing errors. We saw 10 trips whose times run backwards and 2,112 trips with only one usable station.
+
+To import, obtain `kozhikkode.json` yourself (with whatever permission you need), then:
+
+```bash
+pnpm db:import path/to/kozhikkode.json
+pnpm db:import path/to/kozhikkode.json --replace-demo   # also remove the demo records
+```
+
+With the current file this yields about 643 buses, 7,168 trips and 379 stops. Everything imported is `unverified` with no fares, and Malayalam names only for the ~35 best-known stops (developer transliterations, unverified).
+
+**Safety**: one transaction (a malformed file changes nothing); re-running is safe (a bus's trips are replaced as a whole, identical trips stored once, unused stops removed, stops with recorded fares kept); **buses a person verified, edited or rejected are skipped** and counted as `skippedProtected`; the last import (time, SHA-256, counts) is stored and shown.
+
+**Stop-name matching** is deliberately conservative, because a wrong merge creates bus connections that do not exist. Automatic: case, punctuation and spacing. Reviewed aliases in `src/lib/importers/stop-names.ts` (spelling variants of the same place; **a local person should re-check them**). Everything else is *not* merged, even when similar (`Mavoor`/`Mokavoor` are different places); the import prints a "possible duplicates" list to review. `CITY`, `KOZHIKKODE` and `KOZHIKODE CITY` may be different stops, so the UI offers them as "similar stops" instead.
+
+### Passenger reports: API and abuse protection
+
+`POST /api/reports` accepts same-origin JSON only (`Content-Type: application/json`, body up to 8 KB). It validates every field again, keeps context ids only if they exist, saves a readable snapshot of what was reported, and never returns stored data. Protections: per-address limit of 5 reports per 10 minutes plus a global limit of 120 per hour (HTTP 429 with `Retry-After`), a hidden honeypot field (bots get a normal-looking success and nothing is stored), a cap on open reports, and rejection of cross-site `Origin`. Responses are `no-store`.
+
 ## Admin area (`/admin`)
 
-Administrators review, approve, reject and correct data, and work through passenger reports. The admin area is English only, is never linked from the public pages, and is **off until you configure a password**.
+Administrators review, approve, reject and correct bus data, work through passenger reports, and moderate community posts. The admin area is English only, is never linked from the public pages, and is **off until you configure a password**.
 
 ### Admin setup
 
@@ -104,6 +161,7 @@ Restart the server and open `http://localhost:3000/admin`. For quick local tests
 | **Buses** | Filter by status, open reports or rejected; search by name or vehicle number. |
 | **Bus page** | Source and verification details; **Approve** (mark verified), **Withdraw verification**, **Reject** (hide from passengers), **Restore**; correct the times of each trip; record, verify or reject fares; the bus's reports and history. |
 | **Stops** | Correct English and Malayalam names, mark a stop name verified. |
+| **Community** | Hide, restore or dismiss reported contributions. |
 | **History** | Every admin action with who, when, before and after. It cannot be edited from the app. |
 
 ### Verification rules (enforced in code, tested)
@@ -128,41 +186,9 @@ Restart the server and open `http://localhost:3000/admin`. For quick local tests
 
 If you deploy behind a reverse proxy, make it set `X-Forwarded-For` (and strip any value sent by clients). The throttles use it to tell clients apart; without a trusted proxy the global caps still apply.
 
-## Passenger reports: API and abuse protection
-
-`POST /api/reports` accepts same-origin JSON only (`Content-Type: application/json`, body up to 8 KB). It validates every field again, keeps context ids only if they exist, saves a readable snapshot of what was reported, and never returns stored data. Protections: per-address limit of 5 reports per 10 minutes plus a global limit of 120 per hour (HTTP 429 with `Retry-After`), a hidden honeypot field (bots get a normal-looking success and nothing is stored), a cap on open reports, and rejection of cross-site `Origin`. Responses are `no-store`.
-
-## Data model and provenance
-
-Every stop, bus and fare has `data_status` (`demo`, `unverified`, `verified`), `source`, and, once reviewed, `verified_at`, `verified_by`, `verified_source`, `review_note`, `updated_at`. Buses and fares can also be `rejected`. Trips take the status of their bus. Details and the migration history: [docs/migrations.md](docs/migrations.md).
-
-## Importing real data: Kerala Private Bus Timing
-
-**This project never downloads the dataset for you.** The upstream data has no licence, so getting it, and the right to use or share it, is your decision. The file is not in this repository and `data/*.db` is git-ignored; do not commit a database built from it unless you have permission.
-
-What exists (checked 2026-10):
-
-- There is no hosted API. The data is the community repo [amith-vp/Kerala-Private-Bus-Timing](https://github.com/amith-vp/Kerala-Private-Bus-Timing): static JSON files, including `kozhikkode.json` (double "k"), converted from RTI-obtained PDFs.
-- `kozhikkode.json` (about 4 MB) has 647 buses, 9,290 trips and 401 distinct station names.
-- No licence is stated. Last commit 2024-09-03; the schedules come from an RTI request and may be out of date. No fares are included.
-- Its README warns of PDF-parsing errors. We saw 10 trips whose times run backwards and 2,112 trips with only one usable station.
-
-To import, obtain `kozhikkode.json` yourself (with whatever permission you need), then:
-
-```bash
-pnpm db:import path/to/kozhikkode.json
-pnpm db:import path/to/kozhikkode.json --replace-demo   # also remove the demo records
-```
-
-With the current file this yields about 643 buses, 7,168 trips and 379 stops. Everything imported is `unverified` with no fares, and Malayalam names only for the ~35 best-known stops (developer transliterations, unverified).
-
-**Safety**: one transaction (a malformed file changes nothing); re-running is safe (a bus's trips are replaced as a whole, identical trips stored once, unused stops removed, stops with recorded fares kept); **buses a person verified, edited or rejected are skipped** and counted as `skippedProtected`; the last import (time, SHA-256, counts) is stored and shown.
-
-**Stop-name matching** is deliberately conservative, because a wrong merge creates bus connections that do not exist. Automatic: case, punctuation and spacing. Reviewed aliases in `src/lib/importers/stop-names.ts` (spelling variants of the same place; **a local person should re-check them**). Everything else is *not* merged, even when similar (`Mavoor`/`Mokavoor` are different places); the import prints a "possible duplicates" list to review. `CITY`, `KOZHIKKODE` and `KOZHIKODE CITY` may be different stops, so the UI offers them as "similar stops" instead.
-
 ## Translations
 
-`src/lib/i18n.ts` holds every message in English and Malayalam, and the same keys are used for validation, error, empty and loading states. Tests enforce: identical keys and `{placeholders}` in both languages, no untranslated English left in Malayalam, and one Malayalam term per key concept:
+The bus guide is bilingual. `src/lib/i18n.ts` holds every message in English and Malayalam, and the same keys are used for validation, error, empty and loading states. Tests enforce: identical keys and `{placeholders}` in both languages, no untranslated English left in Malayalam, and one Malayalam term per key concept:
 
 | Concept | Malayalam |
 | --- | --- |
@@ -174,7 +200,7 @@ With the current file this yields about 643 buses, 7,168 trips and 379 stops. Ev
 | report / report a problem | അറിയിപ്പ് / പ്രശ്നം അറിയിക്കുക |
 | bus operator | ബസ് ഉടമ |
 
-Style: polite imperative ("…ചെയ്യുക"). The Malayalam was written by the developer and checked for consistency by tests, **not by a native-speaker proofreader. Please have one review it** before a public launch (especially the legal-sounding sentences about verification). The admin area is English only.
+Style: polite imperative ("…ചെയ്യുക"). The Malayalam was written by the developer and checked for consistency by tests, **not by a native-speaker proofreader. Please have one review it** before a public launch (especially the legal-sounding sentences about verification). The admin area and the Voyage travel pages are English only.
 
 ## Accessibility and mobile
 
@@ -182,21 +208,30 @@ Skip link; labelled form controls, errors tied to fields with `aria-describedby`
 
 ## Tests
 
-- `pnpm test`: 166 unit tests (118 for the bus service and admin, 48 for Voyage) covering search and fares, the demo seed, the importer and stop-name rules, **migrations** (a v1 database upgrades with every row intact, backup written once, atomic and idempotent), **review operations** (verify needs a source, demo can't be verified, reject hides from search, edits withdraw verification, fares need a source, audit log, importer leaves reviewed buses alone), **passenger reports** (validation, honeypot, snapshot, workflow), **authentication** (hashing, sessions, expiry, rate limiter, fail-closed configuration) **translations**, and Voyage: link validation (Pinterest/Instagram/video recognition, look-alike domains, dangerous schemes), money and date handling, saved items and collections, trips, activities, reordering, expenses, per-visitor privacy, limits, content integrity (including that every image file exists) and a guard that the bus tables are untouched.
+- `pnpm test`: 166 unit tests (48 for Voyage, 118 for the bus service and admin). Voyage: link validation (Pinterest/Instagram/video recognition, look-alike domains, dangerous schemes), money and date handling, saved items and collections, trips, activities, reordering, expenses, per-visitor privacy, limits, content integrity (including that every image file exists) and a guard that the bus tables are untouched. Bus service and admin: search and fares, the demo seed, the importer and stop-name rules, **migrations** (a v1 database upgrades with every row intact, backup written once, atomic and idempotent), **review operations** (verify needs a source, demo can't be verified, reject hides from search, edits withdraw verification, fares need a source, audit log, importer leaves reviewed buses alone), **passenger reports** (validation, honeypot, snapshot, workflow), **authentication** (hashing, sessions, expiry, rate limiter, fail-closed configuration) and **translations**.
 - Browser checks (Playwright against Microsoft Edge, production build, phone 390×844 and desktop 1280×800): the earlier 94 passenger checks plus 105 Phase 4 checks: report dialog (open, validate, submit, Esc, focus return, Malayalam, all entry points), report API abuse cases, admin access control (unauthenticated redirects, fails closed when unconfigured, cookie flags, sign-out, lockout), the full review workflow on imported data (report → in review → verify → passenger sees "Verified on … against …" in both languages → edit withdraws verification → fare added, verified, rejected → reject and restore → stop rename → audit), demo records refusing verification, a stale-session action being refused, a re-import leaving the reviewed bus untouched, and axe scans. The scripts live outside this repository and are not part of `pnpm test`.
 
 ## Deployment requirements
 
-- A Node.js server with a **writable, persistent disk** for the SQLite file (`DATABASE_PATH`). Serverless or read-only hosts (for example Vercel) will not keep the database, reports or sessions.
+- A Node.js server with a **writable, persistent disk** for the SQLite file (`DATABASE_PATH`). Serverless or read-only hosts (for example Vercel) will not keep the database, saved items, trips, reports or sessions.
 - **HTTPS in production.** The admin cookie is `Secure`, so sign-in does not work over plain http (unless `ADMIN_INSECURE_COOKIES=1`, only for a private network).
 - Set `ADMIN_PASSWORD_HASH` (and `ADMIN_NAME`) in the server environment. Without them `/admin` stays off.
 - Build with `pnpm build`, run with `pnpm start`; build `better-sqlite3` for the target OS and Node version.
 - One app instance per database file (rate limits and sessions' throttles are per process). Run imports while the app is idle or against a copy.
-- The first start after upgrading migrates the database and writes `<file>.pre-v2.bak`. Keep backups of the `.db` file: it now also holds reports, reviews and the audit log.
+- The first start after upgrading migrates the database and writes `<file>.pre-v2.bak`. Keep backups of the `.db` file: it also holds visitors' saved items and trips, reports, reviews and the audit log.
 - Behind a proxy: pass and sanitise `X-Forwarded-For`.
-- Before public launch: resolve the dataset licence question; have the Malayalam reviewed; decide who the admins are and how reports are triaged; consider adding a Content-Security-Policy and per-person admin accounts.
+- Before public launch: review the curated Voyage content and photo credits; resolve the bus dataset licence question; have the Malayalam reviewed; decide who the admins are and how reports and community posts are triaged; consider adding a Content-Security-Policy and per-person admin accounts.
 
 ## Known limitations
+
+**Voyage**
+
+- Curated content covers two destinations and a handful of places each; costs and visit times are rough estimates, and no exchange rates are used, so totals are never converted between currencies.
+- No accounts or sync: saved items and trips belong to one browser and are lost if its cookies are cleared.
+- Reel-to-Travel: Instagram and TikTok usually block anonymous reading, extraction is rule-based (misses and false suggestions are possible, hence the confirm step), screenshots are not read, and the approximate place coordinates are only good for ordering.
+- Community: no verified-visit mechanism, no photo uploads; moderation depends on an admin checking the queue.
+
+**Bus guide**
 
 - Only one bus change; no walking between nearby stops.
 - No day-of-week information in the dataset: every listed time is shown as running daily. Holidays and strikes are not modelled.
@@ -204,5 +239,8 @@ Skip link; labelled form controls, errors tied to fields with `aria-describedby`
 - Imported stops mostly have English names only; the Malayalam transliterations are unverified.
 - No fares in the dataset; fares exist only where an admin has entered them with a source.
 - Timetable data only: no live positions, delays or cancellations.
+
+**General**
+
 - One shared admin login; no email notification of new reports (check the Reports page); a report cannot be answered, because contact details are optional and no message is sent.
 - Rate limits are in memory and reset when the server restarts.

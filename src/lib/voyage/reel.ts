@@ -245,8 +245,8 @@ export function confirmCandidates(
         if (cand.matched_place_id) {
           // A curated place: start from its real details (area, visit time, cost range), then attach the source.
           savedId = savePlace(db, owner, cand.matched_place_id).id;
-          db.prepare("UPDATE saved_items SET capture_id = ?, url = COALESCE(url, ?), platform = CASE WHEN url IS NULL AND ? IS NOT NULL THEN ? ELSE platform END, collection_id = COALESCE(?, collection_id), tags = COALESCE(?, tags), notes = ?, updated_at = ? WHERE id = ? AND owner = ?")
-            .run(captureId, cap.url, cap.url, cap.platform, collectionId, tagsFrom(opts.tags), mergedNotes || null, now(), savedId, owner);
+          db.prepare("UPDATE saved_items SET title = ?, capture_id = ?, url = COALESCE(url, ?), platform = CASE WHEN url IS NULL AND ? IS NOT NULL THEN ? ELSE platform END, collection_id = COALESCE(?, collection_id), tags = COALESCE(?, tags), notes = ?, updated_at = ? WHERE id = ? AND owner = ?")
+            .run(name, captureId, cap.url, cap.url, cap.platform, collectionId, tagsFrom(opts.tags), mergedNotes || null, now(), savedId, owner);
         } else {
           savedId = createSaved(db, owner, {
             title: name, url: cap.url, destinationId: destId, collectionId, category, notes: mergedNotes, tags: opts.tags, captureId,

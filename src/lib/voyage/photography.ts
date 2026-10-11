@@ -1,7 +1,6 @@
-// High-quality editorial travel photography for Kozhikode and Istanbul.
-// These are authentic images highlighting the real atmosphere: Arabian sea sunsets, Malabar food,
-// Beypore Uru shipbuilding, Galata Tower golden-hour light, Bosphorus waterfront, Balat, and Turkish sweets.
-// If any network issue occurs or offline, components automatically fall back to the local SVG illustrations.
+// Remote Unsplash photos (hotlinked, not bundled). Their URLs were checked to return an image, but nobody has confirmed
+// that every photo shows exactly the named place, so treat them as atmosphere. Any photo that fails to load, or a place
+// with no entry here, shows the local SVG illustration instead (see SmartImage).
 
 export interface PhotoAsset {
   src: string;
@@ -89,11 +88,7 @@ export const PLACE_PHOTOS: Record<string, PhotoAsset> = {
     alt: "Historic stone archways and imperial courtyards overlooking the Bosphorus",
     caption: "Imperial seat of Ottoman sultans with sweeping views of the Sea of Marmara",
   },
-  "galata-tower": {
-    src: "https://images.unsplash.com/photo-1568285563399-5231c6a72fb2?auto=format&fit=crop&w=1000&q=80",
-    alt: "Medieval stone Galata Tower rising above the Karaköy skyline at sunset",
-    caption: "Panoramic viewpoint offering 360-degree vistas across the Golden Horn",
-  },
+  // galata-tower: the previous photo URL no longer exists (404), so the local illustration is shown.
   "grand-bazaar": {
     src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1000&q=80",
     alt: "Vaulted arcades hung with glowing mosaic glass lamps in the Grand Bazaar",

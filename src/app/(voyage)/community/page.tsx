@@ -46,7 +46,7 @@ export default async function CommunityPage({ searchParams }: { searchParams: SP
     <div className="space-y-10">
       {/* Editorial Header */}
       <div className="border-b border-[#163d46]/10 pb-6">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#d98772]">Traveller Collective</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-[#9a4a36]">Traveller Collective</span>
         <h1 className="editorial-title mt-2 text-3xl font-extrabold text-[#163d46] sm:text-4xl">
           Traveller Community Notes
         </h1>
@@ -168,7 +168,7 @@ export default async function CommunityPage({ searchParams }: { searchParams: SP
               href={`/community?${destFilter ? `destination=${destFilter}&` : ""}category=${c.value}`}
               className={`inline-flex min-h-10 items-center rounded-lg px-3.5 text-xs font-semibold transition ${
                 (sp.category === c.value || (!sp.category && c.value === "all"))
-                  ? "bg-[#d98772] text-white"
+                  ? "bg-[#a8503a] text-white"
                   : "bg-[#f8f5ef] text-[#243238] hover:bg-[#e4f4f7]"
               }`}
             >
